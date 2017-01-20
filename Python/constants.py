@@ -17,6 +17,18 @@ SPEED=30
 A=31.567
 B=0.066258
 
+
+# Distance calculation in y direction
+A1=-0.081288
+B1=17.67
+C1=136.28
+D1=13.1
+
+# Distance calculation in x direction
+A2=1.2749
+B2=18.127
+C2=1130.5
+
 # image received from the robot
 IMAGE_HEIGHT = 480
 IMAGE_WIDTH=640
