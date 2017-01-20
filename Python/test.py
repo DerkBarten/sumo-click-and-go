@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #import navigation as nav
 #from sumopy.interface import SumoController
 #controller = SumoController()
@@ -34,15 +33,6 @@ mod.initialize(focal_length, aperture, distance)
 undist_coords = mod.apply_geometry_distortion()
 im_undistorted = cv2.remap(im, undist_coords, None, cv2.INTER_LANCZOS4)
 cv2.imwrite(undistorted_image_path, im_undistorted)
-=======
-import navigation as nav
-import time
-from sumopy.interface import SumoController
-
-
-#time.sleep(2)
-#controller = SumoController()
-#nav.picture(controller, "map.jpg")
 
 print nav.distance_y(100)
->>>>>>> 5aeed3c1d09e8b970226e8d2f91c61b85778a37e
+
