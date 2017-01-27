@@ -11,9 +11,9 @@ K = np.array( [[ 167.69730563, 0, 316.21916917],
 d = np.array([-0.04919493,  0.04762404,  0.00313313, -0.00210365, -0.02119823])
 
 
-def unwarp_image(input_image, output_image):
+def unwarp_image(input_matrix):
 	# Read an example image and acquire its size
-	img = cv2.imread(input_image)
+	img = input_matrix
 	h, w = img.shape[:2]
 
 	# Generate new camera matrix from parameters
@@ -30,5 +30,5 @@ def unwarp_image(input_image, output_image):
 	center = (w / 2, h / 2)
 	M = cv2.getRotationMatrix2D(center, 180, 1.0)
 	newimg = cv2.warpAffine(newimg, M, (w, h))
-	cv2.imwrite(output_image, newimg)
+	return newimg
 

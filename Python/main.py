@@ -1,38 +1,74 @@
 from sumopy.interface import SumoController
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from skimage import io
 import numpy as np
 import navigation as nav
-import constants as con
-import image as im # TODO maybe change this name
+from constants import *
 import time
-
 import unwarp as wrp
+import cv2
+import math
+from PIL import Image
+from StringIO import StringIO
+from skimage import io
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-
-controller = SumoController()
-nav.picture(controller, con.PICTURE_NAME)
-# we will just override the image
-wrp.unwarp_image(con.PICTURE_NAME, con.PICTURE_NAME)
-pic = io.imread(con.PICTURE_NAME)
-mode = con.MODE.TO_POINT
-
-def onclick(event):
-  global mode
-  global image
-  if event.xdata != None and event.ydata != None:
-    x,y=nav.screen_to_local(event.xdata, event.ydata)[:2]
-    print "x = " + str(x)
-    print "y = " + str(y)
-    print nav.distance_y(y)
-    print nav.distance_x(x,y)
 	
-plt.gcf().canvas.mpl_connect('button_press_event', onclick)
-canvas = plt.gca()
-canvas.imshow(pic)
-canvas.axis('off')
-plt.show()
-	    
+#nav.slow_turn(controller, math.pi/2.0, chain=True)
+#nav.move_to_point(controller, 0, 150, 20, verbose=False)
+#nav.slow_turn(controller, math.pi/2.0, chain=True)
+#nav.move_to_point(controller, 0, 150, 20, verbose=False)
+#
 
-#print "connected?"
+
+
+def nice_picture(controller):
+	controller.store_pic()
+	pic = controller.get_pic()
+
+	#convert pic to Image
+	img = Image.open(StringIO(pic))
+
+	np_pic = np.array(img.getdata(), np.uint8).reshape(img.size[1], img.size[0], 3)
+	
+	# unwarp the image
+	pic = wrp.unwarp_image(np_pic)
+	return pic
+
+	
+# make a connection to the sumo
+controller = SumoController()
+# need for initializing
+controller.move(0,0)
+
+pic = nice_picture(controller)
+#nav.move_to_point(controller, 0, 100, 20, verbose=False)
+
+#nav.slow_turn(controller, math.pi/)
+#nav.move_to_point(controller, 20, 100, 20, verbose=False)
+
+def onclick(event, x, y, flags, param):
+	global pic
+	if event == cv2.EVENT_LBUTTONDOWN:
+		print "Click detected"
+		x,y=nav.screen_to_local(x, y)[:2]
+		delta_y = nav.distance_y(y)
+		delta_x = nav.distance_x(x,y)
+		print delta_y
+		print delta_x
+		nav.move_to_point(controller, delta_x, delta_y, 20, verbose=False)
+		time.sleep(2)
+		pic = nice_picture(controller)
+		print "Show picture"
+		cv2.imshow("image",pic)
+
+cv2.namedWindow("image")
+cv2.setMouseCallback("image", onclick)
+print "Showing Picture"
+
+  
+while True:
+	cv2.imshow("image",pic)
+	key = cv2.waitKey(1) & 0xFF
+        if key == ord("q"):
+		cv2.destroyAllWindows()
+		exit(0)
