@@ -5,7 +5,9 @@ import sys
 import time
 from PIL import Image
 import numpy as np
-import StringIO
+from StringIO import StringIO
+import unwarp as wrp
+from skimage import io
 
 # transform screen coordinates to local coordinates relative to the sumo
 def screen_to_local(pixel_x, pixel_y):
@@ -18,8 +20,8 @@ def distance_y(pixels):
 
 # calculate the distance in the x axis
 def distance_x(pixels_x, pixels_y):
-	# There is no D since we want the asymptote to be the x axis
-	pixels_per_cm = (1.0 / (float(pixels_y * A2) + B2)) * C2
+	inverse_pixels_per_cm = (1.0 / (float(pixels_y * A2) + B2)) * C2
+	pixels_per_cm = 1.0 / inverse_pixels_per_cm
 	return pixels_x / pixels_per_cm
 
 # this should roughly give the correct distance
@@ -34,22 +36,32 @@ def get_duration(speed, distance):
 def get_turnspeed(angle_per_sec):
 	return BASIC_TURNSPEED * angle_per_sec
 
-# take a picture from the sumo
+
 def picture(controller):
-	
-	# TODO this is the problem
 	controller.store_pic()
 	pic = controller.get_pic()
 	
-	
-	
 	#convert pic to Image
-	pilImage = Image.open(StringIO.StringIO(pic));
+	img = Image.open(StringIO(pic))
+
+	np_pic = np.array(img.getdata(), np.uint8).reshape(img.size[1], img.size[0], 3)
 	
-		
-	# convert to numpy matrix
-	npImage = np.array(pilImage)
-	return npImage
+	# unwarp the image
+	pic = wrp.unwarp_image(np_pic)
+	return pic
+
+
+
+def old_picture(controller):
+	name = PICTURE_NAME
+	controller.store_pic()
+	pic = controller.get_pic()
+	with open(name, 'wb') as f:
+		f.write(pic)
+	pic = io.imread(PICTURE_NAME)
+	return wrp.unwarp_image(pic)
+
+
 
 # angle in radians
 def slow_turn(controller, angle, chain=False):
@@ -67,8 +79,10 @@ def slow_turn(controller, angle, chain=False):
 	
 	if angle < 0:
 		turn_speed *= -1
+	print duration
 	
 	controller.move(0, turn_speed, duration)
+	return duration
 
 def move_to_point(controller, delta_x, delta_y, drive_speed, verbose=False):
 	# the total angle we need to turn
@@ -80,6 +94,7 @@ def move_to_point(controller, delta_x, delta_y, drive_speed, verbose=False):
 	slow_turn(controller, angle, chain=True)
 	print "Starting to Drive"
 	controller.move(drive_speed, 0, drive_duration)
+	return drive_duration
 	
 if __name__ == "__main__":
   #turn(controller, math.pi/2.0, 20)

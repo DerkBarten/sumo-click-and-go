@@ -24,9 +24,9 @@ C1=9.2569
 D1=1.5988
 
 # Distance calculation in x direction
-A2=1.2749
-B2=18.127
-C2=1130.5
+A2=-0.0095437
+B2=2.8863
+C2=0.46188
 
 # image received from the robot
 IMAGE_HEIGHT=480
