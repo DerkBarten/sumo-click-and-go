@@ -1,3 +1,5 @@
+# Depricated Python wrapper for Node.JS API
+
 from Naked.toolshed.shell import execute_js
 import time
 
@@ -11,7 +13,7 @@ def forward(distance):
     TRACTION_MODIFIER=1.0
     forward_time = (distance / V_AVG - T_STOP_FORWARD)*1000 * TRACTION_MODIFIER
     print forward_time
-    if forward_time > MIN_RUNTIME: 
+    if forward_time > MIN_RUNTIME:
         execute_js('forward', str(forward_time))
 
 # minimal angle is 30
@@ -20,12 +22,12 @@ def rotate(angle):
     if(abs(angle) < 30):
         print "invalid angle"
         return
-    
+
     #T_BASIS = 335
     T_BASIS = 62
-    #T_STOP_ROTATE = 490 
+    #T_STOP_ROTATE = 490
     T_STOP_ROTATE = 490
-    
+
     left_rotation = angle < 0
     angle = abs(angle)
     multiplier = float(angle) / 30.0
@@ -34,7 +36,7 @@ def rotate(angle):
     rotation_time = T_BASIS * multiplier + (multiplier - 1) * T_STOP_ROTATE
     if rotation_time < 1:
         rotation_time = T_BASIS
-    
+
     if left_rotation:
         rotation_time *= -1
     #rotation_time = 3200
@@ -59,7 +61,7 @@ def square(radius):
         rotate(-90)
         time.sleep(0.5)
         i+=1
-        
+
 def line(length):
     forward(length)
     time.sleep(0.5)
@@ -69,7 +71,7 @@ def line(length):
     time.sleep(0.5)
     r180()
     time.sleep(0.5)
-    
+
 def jump():
     execute_js('jump')
     time.sleep(0.5)
