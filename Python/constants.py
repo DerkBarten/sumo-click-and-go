@@ -4,48 +4,33 @@ from enum import Enum
 MINIMAL_SPEED=20
 DISTANCE_CONSTANT=2.75
 STOP_CONSTANT=0.4
-BASIC_TURNSPEED=0.125
+
+# empirically gathered constants which help to convert angles to motor input
+TURN_CONSTANT_A=2.6336
+TURN_CONSTANT_B=-0.49059
+
+SLOW_TURN=4
+
 PICTURE_NAME="pic.jpg"
+PICTURE_NAME_UNWARPED="pic_unwarped.jpg"
 
 # user change able parameters
 SPEED=30
 
-
-# CONSTANTS OF IMAGE.PY
-
-# constants found by fitting the data to the curve
-A=31.567
-B=0.066258
-
-
 # Distance calculation in y direction
-A1=-0.081288
-B1=17.67
-C1=136.28
-D1=13.1
+A1=0.001226
+B1=-6.0579
+C1=9.2569
+D1=1.5988
 
 # Distance calculation in x direction
-A2=1.2749
-B2=18.127
-C2=1130.5
+A2=-0.0095437
+B2=2.8863
+C2=0.46188
 
 # image received from the robot
-IMAGE_HEIGHT = 480
+IMAGE_HEIGHT=480
 IMAGE_WIDTH=640
 
-# the horizon in the image, assuming the camera is in a 90 degree angle to the ground, 
-# it is half of the image height
-HORIZON= IMAGE_HEIGHT / 2
-
-# the distance of the lowest pixel in the screen
-BOTTOM_OF_SCREEN=17
-
-# parameters of slic image segmentation
-N_SEGMENTS=45
-COMPACTNESS=14 
-SIGMA=3
-
-
-class MODE(Enum):
-  TO_POINT = 1
-  TO_OBJECT = 2
+# the smallest allowed angle
+DURATION_THRESHHOLD=1.0/40
