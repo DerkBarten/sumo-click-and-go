@@ -9,13 +9,14 @@ import math
 from skimage import io
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
-	
-# make a connection to the sumo
+
+# Make a connection to the sumo
 controller = SumoController()
-# needed for initializing
+# Needed for initializing, probably for initializing the command stack. If this
+# command is not issued before taking a photo, the Sumo usually gives an error.
 controller.move(0,0)
-# get a picture from the sumo
-pic = old_picture(controller)
+# Get a picture from the sumo
+pic = get_picture(controller)
 
 lookForInput=True
 
@@ -42,7 +43,7 @@ cv2.namedWindow("image")
 cv2.setMouseCallback("image", onclick)
 print "Showing Picture"
 
-  
+
 while True:
 	cv2.imshow("image",pic)
 	key = cv2.waitKey(1) & 0xFF
@@ -51,14 +52,14 @@ while True:
         if key == 27:
 		cv2.destroyAllWindows()
 		exit(0)
-		
+
 	if key == 83:
 		duration = slow_turn(controller, math.pi/2.0)
 		time.sleep(duration + 0.5)
 		pic = old_picture(controller)
 		print "Show next picture"
 		cv2.imshow("image",pic)
-		
+
 	if key == 81:
 		duration = slow_turn(controller, -1*math.pi/2.0)
 		time.sleep(duration + 0.5)
