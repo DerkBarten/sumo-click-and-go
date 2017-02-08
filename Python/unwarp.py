@@ -2,6 +2,8 @@ import numpy as np
 import cv2
 from matplotlib import pyplot as plt
 
+# This python script is used to remove lens distortion of the Jumping Sumo
+
 # Define camera matrix K
 K = np.array( [[ 167.69730563, 0, 316.21916917],
 		[0, 165.29531017, 228.87860432],
@@ -11,7 +13,7 @@ K = np.array( [[ 167.69730563, 0, 316.21916917],
 d = np.array([-0.04919493,  0.04762404,  0.00313313, -0.00210365, -0.02119823])
 
 
-def unwarp_image(input_matrix, save=False):
+def unwarp_image(input_matrix):
 	# Read an example image and acquire its size
 	img = input_matrix
 	h, w = img.shape[:2]
@@ -30,11 +32,5 @@ def unwarp_image(input_matrix, save=False):
 	center = (w / 2, h / 2)
 	M = cv2.getRotationMatrix2D(center, 180, 1.0)
 	newimg = cv2.warpAffine(newimg, M, (w, h))
-	
-	if save:
-		from PIL import Image
-		im = Image.fromarray(newimg)
-		im.save("your_file.jpeg")
-	
-	return newimg
 
+	return newimg

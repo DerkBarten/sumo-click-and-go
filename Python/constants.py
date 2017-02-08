@@ -5,32 +5,28 @@ MINIMAL_SPEED=20
 DISTANCE_CONSTANT=2.75
 STOP_CONSTANT=0.4
 
-# empirically gathered constants which help to convert angles to motor input
+# Constants received by using linear regression
 TURN_CONSTANT_A=2.6336
 TURN_CONSTANT_B=-0.49059
-
+# The turnspeed of the sumo
 SLOW_TURN=4
 
-PICTURE_NAME="pic.jpg"
-PICTURE_NAME_UNWARPED="pic_unwarped.jpg"
-
-# user change able parameters
+# Standard speed (scale 0-100)
 SPEED=30
 
-# Distance calculation in y direction
+# Distance constants used by calculation in y direction received by using
+# linear regression
 A1=0.001226
 B1=-6.0579
 C1=9.2569
 D1=1.5988
 
-# Distance calculation in x direction
+# Distance constants used by calculation in x direction received by using
+# linear regression
 A2=-0.0095437
 B2=2.8863
 C2=0.46188
 
-# image received from the robot
+# The image dimensions received from the robot
 IMAGE_HEIGHT=480
 IMAGE_WIDTH=640
-
-# the smallest allowed angle
-DURATION_THRESHHOLD=1.0/40

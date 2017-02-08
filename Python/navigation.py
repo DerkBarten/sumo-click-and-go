@@ -49,11 +49,16 @@ def get_turnspeed(angle_per_sec):
 	return BASIC_TURNSPEED * angle_per_sec
 
 # Take a picture from the sumo
-def picture(controller, name):
+def get_picture(controller):
 	controller.store_pic()
 	pic = controller.get_pic()
-	with open(name, 'wb') as f:
-		f.write(controller.get_pic())
+	# Convert pic to Image
+	img = Image.open(StringIO(pic))
+	# Convert Image to numpy array
+	np_pic = np.array(img.getdata(), np.uint8).reshape(img.size[1], img.size[0], 3)
+	# Unwarp the image
+	pic = wrp.unwarp_image(np_pic)
+	return pic
 
 if __name__ == "__main__":
   move_to_point(0,100,50)
